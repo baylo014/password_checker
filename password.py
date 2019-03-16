@@ -3,13 +3,10 @@ import requests
 import hashlib
 
 def main():
-    password = " ".join(sys.argv[1:])
-    sha = hashlib.sha1(bytes(password, 'utf-8')).hexdigest()
-
+    sha = hashlib.sha1(bytes(" ".join(sys.argv[1:]), 'utf-8')).hexdigest()
     suffix = sha[0:5]
     r = requests.get(url = "https://api.pwnedpasswords.com/range/"+suffix)
-    data = r.text
-    dataList = list(map(lambda x:x.split(":"),data.split("\n")))
+    dataList = list(map(lambda x:x.split(":"),r.text.split("\n")))
     for item in dataList:
         if (sha[5:].upper() in item):
             print("Found " + sha + " w/ + " + str(item[1][:-1]) + " breaches")
